@@ -1,4 +1,5 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 
 import moment from 'moment';
 // Es posible implementar un modal mediante una libreria externa;
@@ -36,6 +37,7 @@ const CalendarModal = () => {
 	// .toDate() retorna la fecha establecida por el objeto startDate
 	const [DateStart, setDateStart] = useState(startDate.toDate());
 	const [DateEnd, setDateEnd] = useState(endDate.toDate());
+	const [titleValid, setTitleValid] = useState(true);
 
 	// hook para el manejo del formulario
 	const [formValues, setformValues] = useState({
@@ -45,11 +47,29 @@ const CalendarModal = () => {
 		end: endDate.toDate(),
 	});
 
-	const { title, note } = formValues;
+	const { title, note, start, end } = formValues;
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formValues);
+
+		// asignamos start y end como istancias de "moment" para poder emplear
+		// los metodos y propieades de moment
+		const momentStart = moment(start);
+		const momentEnd = moment(end);
+
+		// <fecha1>.isSameOrAfter(<fecha2>) recibe una instancia de moment
+		// y retorna booleano indicando si la fecha1 es mayor o igual a la fecha2
+		if (momentStart.isSameOrAfter(momentEnd))
+			return Swal.fire(
+				'Error',
+				'La fecha fin debe se mayor a la fecha de inicio',
+				'error'
+			);
+
+		if (title.trim().length < 1) return setTitleValid(false);
+
+		setTitleValid(true);
+		closeModal(); //cerramos el Modal de formulario
 	};
 
 	const handleInputChange = ({ target }) => {
@@ -129,7 +149,9 @@ const CalendarModal = () => {
 					<label>Titulo y notas</label>
 					<input
 						type="text"
-						className="form-control"
+						className={`form-control ${
+							!titleValid && 'is-invalid'
+						}`}
 						placeholder="Título del evento"
 						name="title"
 						autoComplete="off"
