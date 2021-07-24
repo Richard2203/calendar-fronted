@@ -14,6 +14,7 @@ import { messages } from '../../helpers/calendar-message-es';
 import './calendar_styles.css'; // importando lenguaje espaniol para las fechas
 import 'moment/locale/es';
 import CalendarEvent from './CalendarEvent';
+import CalendarModal from './CalendarModal';
 
 moment.locale('es'); // estableciendo en espaniol la fechas
 
