@@ -37,16 +37,46 @@ const CalendarModal = () => {
 	const [DateStart, setDateStart] = useState(startDate.toDate());
 	const [DateEnd, setDateEnd] = useState(endDate.toDate());
 
+	// hook para el manejo del formulario
+	const [formValues, setformValues] = useState({
+		title: '',
+		notes: '',
+		start: startDate.toDate(),
+		end: endDate.toDate(),
+	});
+
+	const { title, note } = formValues;
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		console.log(formValues);
+	};
+
+	const handleInputChange = ({ target }) => {
+		setformValues({
+			...formValues,
+			[target.name]: target.value,
+		});
+	};
+
 	const closeModal = () => {
 		console.log('closing...');
 	};
 
 	const handleStartDateChange = (e) => {
 		setDateStart(e);
+		setformValues({
+			...formValues,
+			start: e,
+		});
 	};
 
 	const handleEndDateChange = (e) => {
 		setDateEnd(e);
+		setformValues({
+			...formValues,
+			end: e,
+		});
 	};
 
 	// El componente "Modal" es un componente de orden superior, es decir
@@ -71,7 +101,7 @@ const CalendarModal = () => {
 		>
 			<h1> Nuevo evento </h1>
 			<hr />
-			<form className="container">
+			<form className="container" onSubmit={handleSubmit}>
 				<div className="form-group">
 					<label>Fecha y hora inicio</label>
 					<DateTimePicker
@@ -103,6 +133,8 @@ const CalendarModal = () => {
 						placeholder="Título del evento"
 						name="title"
 						autoComplete="off"
+						note={title}
+						onChange={handleInputChange}
 					/>
 					<small id="emailHelp" className="form-text text-muted">
 						Una descripción corta
@@ -116,6 +148,8 @@ const CalendarModal = () => {
 						placeholder="Notas"
 						rows="5"
 						name="notes"
+						value={note}
+						onChange={handleInputChange}
 					></textarea>
 					<small id="emailHelp" className="form-text text-muted">
 						Información adicional
