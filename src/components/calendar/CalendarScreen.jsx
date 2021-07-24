@@ -102,6 +102,7 @@ const CalendarScreen = () => {
 					event: CalendarEvent,
 				}}
 			/>
+			<CalendarModal />
 		</div>
 	);
 };
