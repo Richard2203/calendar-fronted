@@ -14,6 +14,8 @@ import DateTimePicker from 'react-datetime-picker';
 
 import './calendar_styles.css';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { uiCloseModal } from '../../actions/ui';
 
 const customStyles = {
 	content: {
@@ -34,6 +36,9 @@ const startDate = moment().minutes(0).seconds(0).add(1, 'hours');
 const endDate = startDate.clone().add(1, 'hours');
 
 const CalendarModal = () => {
+	const dispatch = useDispatch();
+	const { modalOpen } = useSelector((state) => state.ui);
+
 	// .toDate() retorna la fecha establecida por el objeto startDate
 	const [DateStart, setDateStart] = useState(startDate.toDate());
 	const [DateEnd, setDateEnd] = useState(endDate.toDate());
@@ -69,7 +74,7 @@ const CalendarModal = () => {
 		if (title.trim().length < 1) return setTitleValid(false);
 
 		setTitleValid(true);
-		closeModal(); //cerramos el Modal de formulario
+		closeModal();
 	};
 
 	const handleInputChange = ({ target }) => {
@@ -80,7 +85,7 @@ const CalendarModal = () => {
 	};
 
 	const closeModal = () => {
-		console.log('closing...');
+		dispatch(uiCloseModal());
 	};
 
 	const handleStartDateChange = (e) => {
@@ -111,7 +116,7 @@ const CalendarModal = () => {
 		// -closeTimeoutMS={} recibe un number en milisegundos para establecer
 		//  el efecto de cierre
 		<Modal
-			isOpen={true}
+			isOpen={modalOpen}
 			style={customStyles}
 			className="modal"
 			overlayClassName="modal-fondo"

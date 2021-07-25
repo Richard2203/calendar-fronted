@@ -15,6 +15,8 @@ import './calendar_styles.css'; // importando lenguaje espaniol para las fechas
 import 'moment/locale/es';
 import CalendarEvent from './CalendarEvent';
 import CalendarModal from './CalendarModal';
+import { useDispatch } from 'react-redux';
+import { uiOpenModal } from '../../actions/ui';
 
 moment.locale('es'); // estableciendo en espaniol la fechas
 
@@ -35,13 +37,15 @@ const events = [
 ];
 
 const CalendarScreen = () => {
+	const dispatch = useDispatch();
+
 	// obtiene la ultima pestaña activa o devuelve la pestaña "month"
 	const [lastView, setlastView] = useState(
 		localStorage.getItem('lastView') || 'month'
 	);
 
 	const onDoubleClick = (e) => {
-		console.log(e);
+		dispatch(uiOpenModal());
 	};
 
 	const onSelectEvent = (e) => {
