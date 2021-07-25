@@ -18,6 +18,7 @@ import CalendarModal from './CalendarModal';
 import { useDispatch } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
 import { eventAddNew, eventSetActive } from '../../actions/events';
+import AddNewFab from '../ui/AddNewFab';
 
 moment.locale('es'); // estableciendo en espaniol la fechas
 
@@ -107,6 +108,9 @@ const CalendarScreen = () => {
 					event: CalendarEvent,
 				}}
 			/>
+
+			<AddNewFab />
+
 			<CalendarModal />
 		</div>
 	);

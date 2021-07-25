@@ -1,0 +1,9 @@
+/*FABS*/
+.fab {
+	position: fixed;
+	padding: 25px;
+	border-radius: 100%;
+	font-size: 30px;
+	bottom: 25px;
+	right: 25px;
+}
