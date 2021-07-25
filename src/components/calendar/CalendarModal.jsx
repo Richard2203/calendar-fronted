@@ -16,7 +16,12 @@ import './calendar_styles.css';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiCloseModal } from '../../actions/ui';
-import { eventAddNew } from '../../actions/events';
+import {
+	eventAddNew,
+	eventClearActiveEvent,
+	eventUpdated,
+} from '../../actions/events';
+import { useEffect } from 'react';
 
 const customStyles = {
 	content: {
@@ -36,24 +41,29 @@ Modal.setAppElement('#root');
 const startDate = moment().minutes(0).seconds(0).add(1, 'hours');
 const endDate = startDate.clone().add(1, 'hours');
 
+// .toDate() retorna la fecha establecida por el objeto startDate
+const initForm = {
+	title: '',
+	notes: '',
+	start: startDate.toDate(),
+	end: endDate.toDate(),
+};
+
 const CalendarModal = () => {
 	const dispatch = useDispatch();
 	const { modalOpen } = useSelector((state) => state.ui);
+	const { activeEvent } = useSelector((state) => state.calendar);
 
-	// .toDate() retorna la fecha establecida por el objeto startDate
-	const [DateStart, setDateStart] = useState(startDate.toDate());
-	const [DateEnd, setDateEnd] = useState(endDate.toDate());
 	const [titleValid, setTitleValid] = useState(true);
 
 	// hook para el manejo del formulario
-	const [formValues, setformValues] = useState({
-		title: '',
-		notes: '',
-		start: startDate.toDate(),
-		end: endDate.toDate(),
-	});
+	const [formValues, setformValues] = useState(initForm);
 
 	const { title, note, start, end } = formValues;
+
+	useEffect(() => {
+		if (activeEvent) setformValues(activeEvent);
+	}, [activeEvent, setformValues]);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -74,13 +84,15 @@ const CalendarModal = () => {
 
 		if (title.trim().length < 1) return setTitleValid(false);
 
-		dispatch(
-			eventAddNew({
-				...formValues,
-				id: new Date().getTime(),
-				user: { uid: 123, name: 'checo perez' },
-			})
-		);
+		if (activeEvent) dispatch(eventUpdated(formValues));
+		else
+			dispatch(
+				eventAddNew({
+					...formValues,
+					id: new Date().getTime(),
+					user: { uid: 123, name: 'checo perez' },
+				})
+			);
 
 		setTitleValid(true);
 		closeModal();
@@ -95,10 +107,11 @@ const CalendarModal = () => {
 
 	const closeModal = () => {
 		dispatch(uiCloseModal());
+		dispatch(eventClearActiveEvent());
+		setformValues(initForm);
 	};
 
 	const handleStartDateChange = (e) => {
-		setDateStart(e);
 		setformValues({
 			...formValues,
 			start: e,
@@ -106,7 +119,6 @@ const CalendarModal = () => {
 	};
 
 	const handleEndDateChange = (e) => {
-		setDateEnd(e);
 		setformValues({
 			...formValues,
 			end: e,
@@ -140,7 +152,7 @@ const CalendarModal = () => {
 					<label>Fecha y hora inicio</label>
 					<DateTimePicker
 						onChange={handleStartDateChange}
-						value={DateStart}
+						value={start}
 						className="form-control"
 					/>
 				</div>
@@ -149,12 +161,12 @@ const CalendarModal = () => {
 					<label>Fecha y hora fin</label>
 					<DateTimePicker
 						onChange={handleEndDateChange}
-						value={DateEnd}
+						value={end}
 						className="form-control"
 						// minDate={} recibe un objeto de tipo fecha
 						// establece el tiempo minimo que debe de tener y bloquea
 						// las fechas anteriores a ese objeto
-						minDate={DateStart}
+						minDate={start}
 					/>
 				</div>
 
