@@ -17,6 +17,7 @@ import CalendarEvent from './CalendarEvent';
 import CalendarModal from './CalendarModal';
 import { useDispatch } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
+import { eventAddNew, eventSetActive } from '../../actions/events';
 
 moment.locale('es'); // estableciendo en espaniol la fechas
 
@@ -49,7 +50,7 @@ const CalendarScreen = () => {
 	};
 
 	const onSelectEvent = (e) => {
-		console.log(e);
+		dispatch(eventSetActive(e));
 	};
 
 	const onViewChange = (e) => {
