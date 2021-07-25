@@ -16,6 +16,7 @@ import './calendar_styles.css';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiCloseModal } from '../../actions/ui';
+import { eventAddNew } from '../../actions/events';
 
 const customStyles = {
 	content: {
@@ -72,6 +73,14 @@ const CalendarModal = () => {
 			);
 
 		if (title.trim().length < 1) return setTitleValid(false);
+
+		dispatch(
+			eventAddNew({
+				...formValues,
+				id: new Date().getTime(),
+				user: { uid: 123, name: 'checo perez' },
+			})
+		);
 
 		setTitleValid(true);
 		closeModal();
