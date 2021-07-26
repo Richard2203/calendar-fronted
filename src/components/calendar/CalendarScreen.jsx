@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
-import NavBar from '../ui/NavBar';
+import { useDispatch, useSelector } from 'react-redux';
+
 // el calendario proviene de una libreria instalada con
 // npm i react-big-calendar, las importaciones de la linea 5 y 6 son necesarias
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-//esta libreria nos permite la manipulacion de fechas
-import moment from 'moment';
-
 import { messages } from '../../helpers/calendar-message-es';
+
 // para mostrar el contenido del calendario debemos aplicas estilos width y height
 // indicando que abarque el 100%
 import './calendar_styles.css'; // importando lenguaje espaniol para las fechas
+
+//esta libreria nos permite la manipulacion de fechas
+import moment from 'moment';
 import 'moment/locale/es';
+
+import NavBar from '../ui/NavBar';
 import CalendarEvent from './CalendarEvent';
 import CalendarModal from './CalendarModal';
-import { useDispatch, useSelector } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
-import { eventAddNew, eventSetActive } from '../../actions/events';
+import {
+	eventAddNew,
+	eventClearActiveEvent,
+	eventSetActive,
+} from '../../actions/events';
 import AddNewFab from '../ui/AddNewFab';
+import DeletedEventFab from '../ui/DeletedEventFab';
 
 moment.locale('es'); // estableciendo en espaniol la fechas
 
@@ -26,7 +33,7 @@ const localizer = momentLocalizer(moment);
 
 const CalendarScreen = () => {
 	const dispatch = useDispatch();
-	const { events } = useSelector((state) => state.calendar);
+	const { events, activeEvent } = useSelector((state) => state.calendar);
 
 	// obtiene la ultima pestaña activa o devuelve la pestaña "month"
 	const [lastView, setlastView] = useState(
@@ -44,6 +51,10 @@ const CalendarScreen = () => {
 	const onViewChange = (e) => {
 		setlastView(e);
 		localStorage.setItem('lastView', e);
+	};
+
+	const onSelectSlot = (e) => {
+		if (activeEvent) dispatch(eventClearActiveEvent());
 	};
 
 	// este metodo sera pasado a la propieadad "eventPropGetter"
@@ -79,6 +90,8 @@ const CalendarScreen = () => {
 			 	 al dar click en la barra de "meses,semanas,dias,agenda", retorna
 				 un string correspondiente a la vista seleccionada
 				-view='' recibe la ultima pestaña seleccionada en formato string
+				-onSelectSlot={} retorna la informacion de un casilla clickeada
+				 sin importar si esta o no vacia
 				*/}
 			<Calendar
 				localizer={localizer}
@@ -89,6 +102,8 @@ const CalendarScreen = () => {
 				eventPropGetter={eventStyleGetter}
 				onDoubleClickEvent={onDoubleClick}
 				onSelectEvent={onSelectEvent}
+				onSelectSlot={onSelectSlot}
+				selectable={true}
 				onView={onViewChange}
 				view={lastView}
 				components={{
@@ -96,6 +111,7 @@ const CalendarScreen = () => {
 				}}
 			/>
 
+			{activeEvent && <DeletedEventFab />}
 			<AddNewFab />
 
 			<CalendarModal />

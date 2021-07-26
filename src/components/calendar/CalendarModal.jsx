@@ -63,6 +63,7 @@ const CalendarModal = () => {
 
 	useEffect(() => {
 		if (activeEvent) setformValues(activeEvent);
+		else setformValues(initForm);
 	}, [activeEvent, setformValues]);
 
 	const handleSubmit = (e) => {
@@ -145,7 +146,7 @@ const CalendarModal = () => {
 			contentLabel="Example Modal"
 			onRequestClose={closeModal}
 		>
-			<h1> Nuevo evento </h1>
+			<h1> {activeEvent ? 'Editar Evento' : 'Nuevo evento'} </h1>
 			<hr />
 			<form className="container" onSubmit={handleSubmit}>
 				<div className="form-group">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
-import './AddNewFab.css';
+import './FabStyles.css';
 
 const AddNewFab = () => {
 	const dispatch = useDispatch();
