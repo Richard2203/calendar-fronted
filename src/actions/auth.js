@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import { fetchConToken, fetchSinToken } from '../helpers/fetch';
 import { types } from '../types/types';
+import { Logout } from './events';
 
 export const startLogin = (userCreden) => {
 	return async (dispatch) => {
@@ -64,11 +65,13 @@ export const startLogout = () => {
 		localStorage.clear();
 
 		// aqui se purga la informacion en el reducer
+		dispatch(authLogout());
+
 		dispatch(Logout());
 	};
 };
 
-const Logout = () => ({ type: types.authLogout });
+const authLogout = () => ({ type: types.authLogout });
 
 const login = (user) => ({
 	type: types.authLogin,
