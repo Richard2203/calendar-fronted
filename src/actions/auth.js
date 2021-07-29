@@ -15,7 +15,30 @@ export const startLogin = (userCreden) => {
 	};
 };
 
+export const startRegister = (name, email, password) => {
+	return async (dispatch) => {
+		const res = await fetchSinToken(
+			'auth/new',
+			{ name, email, password },
+			'POST'
+		);
+
+		const { ok, name: nam, uid, token, msg } = await res.json();
+
+		if (ok) {
+			localStorage.setItem('token', token);
+			localStorage.setItem('token-init-date', new Date().getTime());
+			dispatch(login({ nam, uid }));
+		} else Swal.fire('Error', msg, 'error');
+	};
+};
+
 const login = (user) => ({
 	type: types.authLogin,
+	payload: user,
+});
+
+const register = (user) => ({
+	type: types.authStartRegister,
 	payload: user,
 });
