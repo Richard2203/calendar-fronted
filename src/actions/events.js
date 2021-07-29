@@ -1,5 +1,7 @@
+import Swal from 'sweetalert2';
 import { types } from '../types/types';
 import { fetchConToken } from '../helpers/fetch';
+import { Events_Parse } from '../helpers/Events_Parse';
 
 export const eventStartAddNew = (event) => {
 	return async (dispatch, getState) => {
@@ -9,7 +11,6 @@ export const eventStartAddNew = (event) => {
 			const resp = await fetchConToken('events', event, 'POST');
 			const body = await resp.json();
 
-			console.log(body);
 			if (body.ok) {
 				// agregando la propieadad "id" al objeto "event"
 				event.id = body.evento.id;
@@ -40,7 +41,25 @@ export const eventClearActiveEvent = () => ({
 	type: types.eventClearActiveEvent,
 });
 
-export const eventUpdated = (event) => ({
+export const eventStartUpdated = (event) => {
+	return async (dispatch) => {
+		try {
+			const resp = await fetchConToken(
+				`events/${event.id}`,
+				event,
+				'PUT'
+			);
+			const body = await resp.json();
+
+			if (body.ok) dispatch(eventUpdated(event));
+			else Swal.fire('error', body.msg, 'error');
+		} catch (error) {
+			console.log(error);
+		}
+	};
+};
+
+const eventUpdated = (event) => ({
 	type: types.eventUpdated,
 	payload: event,
 });
@@ -48,3 +67,21 @@ export const eventUpdated = (event) => ({
 export const eventDeleted = () => ({
 	type: types.eventDeleted,
 });
+
+export const eventStartLoading = () => {
+	return async (dispatch) => {
+		try {
+			const resp = await fetchConToken('events');
+			const { events } = await resp.json();
+
+			// obteniendo los events retornados de la peticion fetch
+			const ArrayEvents = Events_Parse(events);
+
+			dispatch(eventLoaded(ArrayEvents));
+		} catch (error) {
+			console.log(error);
+		}
+	};
+};
+
+const eventLoaded = (events) => ({ type: types.eventLoaded, payload: events });

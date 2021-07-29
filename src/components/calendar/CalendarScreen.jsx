@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // el calendario proviene de una libreria instalada con
@@ -19,7 +19,11 @@ import NavBar from '../ui/NavBar';
 import CalendarEvent from './CalendarEvent';
 import CalendarModal from './CalendarModal';
 import { uiOpenModal } from '../../actions/ui';
-import { eventClearActiveEvent, eventSetActive } from '../../actions/events';
+import {
+	eventClearActiveEvent,
+	eventSetActive,
+	eventStartLoading,
+} from '../../actions/events';
 import AddNewFab from '../ui/AddNewFab';
 import DeletedEventFab from '../ui/DeletedEventFab';
 
@@ -30,11 +34,17 @@ const localizer = momentLocalizer(moment);
 const CalendarScreen = () => {
 	const dispatch = useDispatch();
 	const { events, activeEvent } = useSelector((state) => state.calendar);
+	const { uid } = useSelector((state) => state.auth);
 
 	// obtiene la ultima pestaña activa o devuelve la pestaña "month"
 	const [lastView, setlastView] = useState(
 		localStorage.getItem('lastView') || 'month'
 	);
+
+	// disparando la carga de eventos de la BD
+	useEffect(() => {
+		dispatch(eventStartLoading());
+	}, [dispatch]);
 
 	const onDoubleClick = (e) => {
 		dispatch(uiOpenModal());
@@ -58,7 +68,9 @@ const CalendarScreen = () => {
 	// en particular
 	const eventStyleGetter = (event, start, end, isSelected) => {
 		const style = {
-			backgroundColor: '#367CF7',
+			// si el uid del creador es igual al del usuario autenticado
+			// entonces colorea de '#367CF7' sino de "gray"
+			backgroundColor: uid === event.user._uid ? '#367CF7' : 'gray',
 			borderRadius: '0px',
 			opacity: 0.7,
 			display: 'block',

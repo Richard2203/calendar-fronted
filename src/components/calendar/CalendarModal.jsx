@@ -19,7 +19,7 @@ import { uiCloseModal } from '../../actions/ui';
 import {
 	eventStartAddNew,
 	eventClearActiveEvent,
-	eventUpdated,
+	eventStartUpdated,
 } from '../../actions/events';
 import { useEffect } from 'react';
 
@@ -85,7 +85,7 @@ const CalendarModal = () => {
 
 		if (title.trim().length < 1) return setTitleValid(false);
 
-		if (activeEvent) dispatch(eventUpdated(formValues));
+		if (activeEvent) dispatch(eventStartUpdated(formValues));
 		else dispatch(eventStartAddNew(formValues));
 
 		setTitleValid(true);
