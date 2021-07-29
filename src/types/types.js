@@ -2,6 +2,7 @@ export const types = {
 	uiOpenModal: '[UI] Open Modal',
 	uiCloseModal: '[UI] Close Modal',
 
+	eventStartAddNew: '[Event] Start Add New',
 	eventSetActive: '[Event] Set Active',
 	eventAddNew: '[Event] Add new',
 	eventClearActiveEvent: '[Event] Clear Active Event',

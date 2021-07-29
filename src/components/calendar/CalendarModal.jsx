@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiCloseModal } from '../../actions/ui';
 import {
-	eventAddNew,
+	eventStartAddNew,
 	eventClearActiveEvent,
 	eventUpdated,
 } from '../../actions/events';
@@ -86,14 +86,7 @@ const CalendarModal = () => {
 		if (title.trim().length < 1) return setTitleValid(false);
 
 		if (activeEvent) dispatch(eventUpdated(formValues));
-		else
-			dispatch(
-				eventAddNew({
-					...formValues,
-					id: new Date().getTime(),
-					user: { uid: 123, name: 'checo perez' },
-				})
-			);
+		else dispatch(eventStartAddNew(formValues));
 
 		setTitleValid(true);
 		closeModal();
