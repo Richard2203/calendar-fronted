@@ -35,22 +35,40 @@ export const startRegister = (name, email, password) => {
 
 export const startCheking = () => {
 	return async (dispatch) => {
+		if (!localStorage.getItem('token')) {
+			dispatch(checkingFinish());
+			return;
+		}
+
 		const res = await fetchConToken('auth/renew');
 
-		const { ok, name, uid, token, msg } = await res.json();
+		const { ok, name, uid, token } = await res.json();
 
 		if (ok) {
 			localStorage.setItem('token', token);
 			localStorage.setItem('token-init-date', new Date().getTime());
 			dispatch(login({ name, uid }));
-		} else {
-			Swal.fire('Error', msg, 'error');
-			dispatch(checkingFinish());
-		}
+		} else dispatch(checkingFinish());
 	};
 };
 
 const checkingFinish = () => ({ type: types.authCheckingFinish });
+
+export const startLogout = () => {
+	return (dispatch) => {
+		// implementando el localStorage en un action puesto que de ponerla
+		// directamente en el reducer puede marcar error. La logica se debe
+		// separar
+
+		// purga todo el localStorage
+		localStorage.clear();
+
+		// aqui se purga la informacion en el reducer
+		dispatch(Logout());
+	};
+};
+
+const Logout = () => ({ type: types.authLogout });
 
 const login = (user) => ({
 	type: types.authLogin,
