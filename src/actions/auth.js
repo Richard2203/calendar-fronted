@@ -3,16 +3,27 @@ import { fetchConToken, fetchSinToken } from '../helpers/fetch';
 import { types } from '../types/types';
 import { Logout } from './events';
 
-export const startLogin = (userCreden) => {
+export const startLogin = ({ email, password }) => {
 	return async (dispatch) => {
-		const res = await fetchSinToken('auth', userCreden, 'POST');
-		const { ok, token, uid, name, msg } = await res.json();
-
-		if (ok) {
-			localStorage.setItem('token', token);
-			localStorage.setItem('token-init-date', new Date().getTime());
-			dispatch(login({ uid, name }));
-		} else Swal.fire('Error', msg, 'error');
+		if (password.length <= 8)
+			Swal.fire(
+				'Error',
+				'las contraseñas son de 8 caracteres o mas',
+				'error'
+			);
+		else {
+			const res = await fetchSinToken(
+				'auth',
+				{ email, password },
+				'POST'
+			);
+			const { ok, token, uid, name, msg } = await res.json();
+			if (ok) {
+				localStorage.setItem('token', token);
+				localStorage.setItem('token-init-date', new Date().getTime());
+				dispatch(login({ uid, name }));
+			} else Swal.fire('Error', msg, 'error');
+		}
 	};
 };
 
