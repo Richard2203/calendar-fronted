@@ -35,7 +35,7 @@ const customStyles = {
 };
 
 // establecemos el Modal al componente root
-Modal.setAppElement('#root');
+if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
 // minutes(<minuto:number>).seconds(<segundos:number>).add(<number>,'TipTiempo:string')
 const startDate = moment().minutes(0).seconds(0).add(1, 'hours');
