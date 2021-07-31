@@ -26,15 +26,16 @@ const LoginScreen = () => {
 		R_name: '',
 		R_email: '',
 		R_password: '',
-		R_passwordCofirm: '',
+		R_passwordC: '',
 	};
 
 	const [formRegister, handleInputChangeRe] = useForm(initialRegister);
-	const { R_name, R_email, R_password, R_passwordCofirm } = formRegister;
+	const { R_name, R_email, R_password, R_passwordC } = formRegister;
 
 	const handleRegister = (e) => {
 		e.preventDefault();
-		if (R_password !== R_passwordCofirm)
+
+		if (R_password !== R_passwordC)
 			Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
 		else dispatch(startRegister(R_name, R_email, R_password));
 	};
@@ -44,7 +45,7 @@ const LoginScreen = () => {
 			<div className="row">
 				<div className="col-md-6 login-form-1">
 					<h3>Ingreso</h3>
-					<form onSubmit={handleLogin}>
+					<form onSubmit={handleLogin} id="formLogin">
 						<div className="form-group">
 							<input
 								type="email"
@@ -116,9 +117,9 @@ const LoginScreen = () => {
 								type="password"
 								className="form-control"
 								placeholder="Repita la contraseña"
-								value={R_passwordCofirm}
+								value={R_passwordC}
 								onChange={handleInputChangeRe}
-								name="R_passwordCofirm"
+								name="R_passwordC"
 							/>
 						</div>
 

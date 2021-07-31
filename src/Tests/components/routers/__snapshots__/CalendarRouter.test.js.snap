@@ -913,6 +913,7 @@ exports[`Pruebas en <CalendarRouter/> debe de mostrar el loginScreen si no esta 
           Registro
         </h3>
         <form
+          id="formRegister"
           onSubmit={[Function]}
         >
           <div
