@@ -66,8 +66,6 @@ export const startCheking = () => {
 	};
 };
 
-const checkingFinish = () => ({ type: types.authCheckingFinish });
-
 export const startLogout = () => {
 	return (dispatch) => {
 		// implementando el localStorage en un action puesto que de ponerla
@@ -84,9 +82,11 @@ export const startLogout = () => {
 	};
 };
 
-const authLogout = () => ({ type: types.authLogout });
+export const checkingFinish = () => ({ type: types.authCheckingFinish });
 
-const login = (user) => ({
+export const authLogout = () => ({ type: types.authLogout });
+
+export const login = (user) => ({
 	type: types.authLogin,
 	payload: user,
 });
