@@ -138,6 +138,7 @@ const CalendarModal = () => {
 			closeTimeoutMS={200}
 			contentLabel="Example Modal"
 			onRequestClose={closeModal}
+			ariaHideApp={false}
 		>
 			<h1> {activeEvent ? 'Editar Evento' : 'Nuevo evento'} </h1>
 			<hr />

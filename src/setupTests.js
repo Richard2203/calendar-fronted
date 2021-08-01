@@ -48,3 +48,5 @@ Enzyme.configure({ adapter: new Adapter() });
 
 //esta y la linea 34 vienen juntas
 expect.addSnapshotSerializer(createSerializer({ mode: 'deep' }));
+
+HTMLCanvasElement.prototype.getContext = () => {};

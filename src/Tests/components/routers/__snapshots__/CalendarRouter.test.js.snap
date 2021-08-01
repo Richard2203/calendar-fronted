@@ -869,6 +869,7 @@ exports[`Pruebas en <CalendarRouter/> debe de mostrar el loginScreen si no esta 
           Ingreso
         </h3>
         <form
+          id="formLogin"
           onSubmit={[Function]}
         >
           <div
@@ -913,7 +914,6 @@ exports[`Pruebas en <CalendarRouter/> debe de mostrar el loginScreen si no esta 
           Registro
         </h3>
         <form
-          id="formRegister"
           onSubmit={[Function]}
         >
           <div
@@ -957,7 +957,7 @@ exports[`Pruebas en <CalendarRouter/> debe de mostrar el loginScreen si no esta 
           >
             <input
               className="form-control"
-              name="R_passwordCofirm"
+              name="R_passwordC"
               onChange={[Function]}
               placeholder="Repita la contraseña"
               type="password"
